@@ -450,3 +450,95 @@ textarea {
     font-size: 2.8rem;
   }
 }
+
+/* =====================================================
+   EMPLOYEE PORTAL
+===================================================== */
+
+.employee-login-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.employee-dashboard {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.employee-profile-card {
+  padding: 2rem;
+}
+
+.employee-profile-card h3 {
+  font-size: 2rem;
+  margin-bottom: 0.35rem;
+}
+
+.employee-stat-grid article {
+  min-height: 145px;
+}
+
+.employee-stat-grid h3 {
+  margin-top: 0.5rem;
+  font-size: 1.65rem;
+}
+
+.employee-detail-layout {
+  margin-top: 0.5rem;
+}
+
+.employee-project-item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--surface-border);
+}
+
+.employee-project-item:last-child {
+  border-bottom: 0;
+}
+
+.employee-project-item h4 {
+  margin-bottom: 0.3rem;
+  font-size: 1.15rem;
+}
+
+.role-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1rem;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(94, 234, 212, 0.09);
+  border: 1px solid rgba(94, 234, 212, 0.22);
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.status-pill.inactive {
+  background: rgba(248, 113, 113, 0.14);
+  color: #fca5a5;
+}
+
+.status-pill.loa {
+  background: rgba(250, 204, 21, 0.14);
+  color: #fde047;
+}
+
+@media (max-width: 760px) {
+  .employee-login-card {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .employee-login-card .button {
+    width: 100%;
+  }
+}
