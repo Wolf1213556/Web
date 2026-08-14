@@ -1,6 +1,5 @@
 // ======================================================
 // NEXORA WEBSITE
-// script.js
 // ======================================================
 
 
@@ -18,21 +17,17 @@ const navLinks =
 
 if (navToggle && navLinks) {
 
-  navToggle.addEventListener(
-    "click",
-    () => {
+  navToggle.addEventListener("click", () => {
 
-      const isOpen =
-        navLinks.classList.toggle("open");
+    const isOpen =
+      navLinks.classList.toggle("open");
 
+    navToggle.setAttribute(
+      "aria-expanded",
+      String(isOpen)
+    );
 
-      navToggle.setAttribute(
-        "aria-expanded",
-        String(isOpen)
-      );
-
-    }
-  );
+  });
 
 }
 
@@ -43,75 +38,51 @@ if (navToggle && navLinks) {
 // ======================================================
 
 const filterButtons =
-  document.querySelectorAll(
-    ".filter-button"
-  );
-
+  document.querySelectorAll(".filter-button");
 
 const projectCards =
-  document.querySelectorAll(
-    ".project-card"
-  );
+  document.querySelectorAll(".project-card");
 
 
-filterButtons.forEach(
-  (button) => {
+filterButtons.forEach((button) => {
 
-    button.addEventListener(
-      "click",
-      () => {
+  button.addEventListener("click", () => {
 
-        const filter =
-          button.getAttribute(
-            "data-filter"
-          );
+    const filter =
+      button.getAttribute("data-filter");
 
 
-        filterButtons.forEach(
-          (item) => {
+    filterButtons.forEach((item) => {
 
-            item.classList.remove(
-              "active"
-            );
+      item.classList.remove("active");
 
-          }
-        );
+    });
 
 
-        button.classList.add(
-          "active"
-        );
+    button.classList.add("active");
 
 
-        projectCards.forEach(
-          (card) => {
+    projectCards.forEach((card) => {
 
-            const categories =
-              card.getAttribute(
-                "data-category"
-              ) || "";
+      const categories =
+        card.getAttribute("data-category") || "";
 
 
-            const shouldShow =
-              filter === "all" ||
-              categories.includes(
-                filter
-              );
+      const shouldShow =
+        filter === "all" ||
+        categories.includes(filter);
 
 
-            card.classList.toggle(
-              "is-hidden",
-              !shouldShow
-            );
+      card.classList.toggle(
+        "is-hidden",
+        !shouldShow
+      );
 
-          }
-        );
+    });
 
-      }
-    );
+  });
 
-  }
-);
+});
 
 
 
@@ -121,61 +92,60 @@ filterButtons.forEach(
 
 document
   .querySelectorAll("form")
-  .forEach(
-    (form) => {
+  .forEach((form) => {
 
-      const message =
-        form.querySelector(
-          ".form-message"
-        );
+    const message =
+      form.querySelector(".form-message");
 
 
-      form.addEventListener(
-        "submit",
-        (event) => {
+    form.addEventListener("submit", (event) => {
 
-          event.preventDefault();
+      event.preventDefault();
 
 
-          if (!message) {
-            return;
-          }
+      if (!message) {
+        return;
+      }
 
 
-          const isCareerForm =
-            form.id ===
-            "career-application";
+      const career =
+        form.id === "career-application";
 
 
-          message.textContent =
-            isCareerForm
-              ? "Application submitted. Routed into the Nexora HR Discord review queue."
-              : "Request submitted. Routed into the Nexora client intake workflow.";
+      if (career) {
+
+        message.textContent =
+          "Application submitted.";
+
+      } else {
+
+        message.textContent =
+          "Request submitted.";
+
+      }
 
 
-          form.reset();
+      form.reset();
 
-        }
-      );
+    });
 
-    }
-  );
+  });
 
 
 
 // ======================================================
-// EMPLOYEE PORTAL CONFIG
+// EMPLOYEE PORTAL CONFIGURATION
 // ======================================================
 
 
-// CHANGE THIS ONCE YOUR API IS PUBLIC
+// CHANGE THIS ONCE YOUR API HAS A PUBLIC URL
 const API_URL =
   "http://localhost:8000";
 
 
 
 // ======================================================
-// EMPLOYEE PORTAL ELEMENTS
+// ELEMENTS
 // ======================================================
 
 const employeeLogin =
@@ -210,30 +180,29 @@ const logoutEmployeeButton =
 
 
 // ======================================================
-// DISCORD OAUTH CALLBACK
+// DISCORD CALLBACK TOKEN
 // ======================================================
 
-const currentUrlParams =
+const urlParameters =
   new URLSearchParams(
     window.location.search
   );
 
 
-const oauthToken =
-  currentUrlParams.get(
+const discordToken =
+  urlParameters.get(
     "token"
   );
 
 
-if (oauthToken) {
+if (discordToken) {
 
   localStorage.setItem(
     "nexora_token",
-    oauthToken
+    discordToken
   );
 
 
-  // Remove token from visible browser URL
   const cleanUrl =
     window.location.origin +
     window.location.pathname +
@@ -251,10 +220,10 @@ if (oauthToken) {
 
 
 // ======================================================
-// TOKEN FUNCTIONS
+// TOKEN
 // ======================================================
 
-function getNexoraToken() {
+function getToken() {
 
   return localStorage.getItem(
     "nexora_token"
@@ -264,24 +233,65 @@ function getNexoraToken() {
 
 
 
-function saveNexoraToken(
-  token
-) {
+function removeToken() {
 
-  localStorage.setItem(
-    "nexora_token",
-    token
+  localStorage.removeItem(
+    "nexora_token"
   );
 
 }
 
 
 
-function removeNexoraToken() {
+// ======================================================
+// LOGGED OUT
+// ======================================================
 
-  localStorage.removeItem(
-    "nexora_token"
-  );
+function showLoggedOut() {
+
+  if (employeeLogin) {
+
+    employeeLogin.classList.remove(
+      "is-hidden"
+    );
+
+  }
+
+
+  if (employeeDashboard) {
+
+    employeeDashboard.classList.add(
+      "is-hidden"
+    );
+
+  }
+
+}
+
+
+
+// ======================================================
+// LOGGED IN
+// ======================================================
+
+function showLoggedIn() {
+
+  if (employeeLogin) {
+
+    employeeLogin.classList.add(
+      "is-hidden"
+    );
+
+  }
+
+
+  if (employeeDashboard) {
+
+    employeeDashboard.classList.remove(
+      "is-hidden"
+    );
+
+  }
 
 }
 
@@ -293,26 +303,9 @@ function removeNexoraToken() {
 
 function logoutEmployee() {
 
-  removeNexoraToken();
+  removeToken();
 
-
-  if (employeeDashboard) {
-
-    employeeDashboard.classList.add(
-      "is-hidden"
-    );
-
-  }
-
-
-  if (employeeLogin) {
-
-    employeeLogin.classList.remove(
-      "is-hidden"
-    );
-
-  }
-
+  showLoggedOut();
 
   if (employeeError) {
 
@@ -330,148 +323,20 @@ function logoutEmployee() {
 
 
 // ======================================================
-// API REQUEST
+// SAFE TEXT
 // ======================================================
 
-async function nexoraApi(
-  path
-) {
+function escapeHtml(value) {
 
-  const token =
-    getNexoraToken();
+  const element =
+    document.createElement("div");
 
 
-  if (!token) {
-
-    throw new Error(
-      "You are not logged in."
-    );
-
-  }
+  element.textContent =
+    String(value ?? "");
 
 
-  let response;
-
-
-  try {
-
-    response =
-      await fetch(
-        `${API_URL}${path}`,
-        {
-
-          method: "GET",
-
-          headers: {
-
-            Authorization:
-              `Bearer ${token}`,
-
-            "Content-Type":
-              "application/json"
-
-          }
-
-        }
-      );
-
-  } catch (error) {
-
-    console.error(
-      "Nexora API connection error:",
-      error
-    );
-
-
-    throw new Error(
-      "Could not connect to the Nexora API."
-    );
-
-  }
-
-
-
-  // SESSION EXPIRED
-
-  if (
-    response.status === 401
-  ) {
-
-    removeNexoraToken();
-
-
-    throw new Error(
-      "Your login session expired. Please sign in again."
-    );
-
-  }
-
-
-
-  // NOT EMPLOYEE
-
-  if (
-    response.status === 404
-  ) {
-
-    throw new Error(
-      "Your Discord account is not linked to a Nexora employee profile."
-    );
-
-  }
-
-
-
-  // PERMISSION DENIED
-
-  if (
-    response.status === 403
-  ) {
-
-    throw new Error(
-      "You do not have permission to access the employee portal."
-    );
-
-  }
-
-
-
-  // OTHER ERROR
-
-  if (!response.ok) {
-
-    let detail =
-      "Could not load employee information.";
-
-
-    try {
-
-      const data =
-        await response.json();
-
-
-      if (data.detail) {
-
-        detail =
-          data.detail;
-
-      }
-
-    } catch {
-
-      // Invalid JSON response
-
-    }
-
-
-    throw new Error(
-      detail
-    );
-
-  }
-
-
-  return response.json();
+  return element.innerHTML;
 
 }
 
@@ -482,18 +347,18 @@ async function nexoraApi(
 // ======================================================
 
 function setText(
-  elementId,
+  id,
   value
 ) {
 
   const element =
-    document.getElementById(
-      elementId
-    );
+    document.getElementById(id);
 
 
   if (!element) {
+
     return;
+
   }
 
 
@@ -505,38 +370,10 @@ function setText(
 
 
 // ======================================================
-// SAFE HTML
-// ======================================================
-
-function escapeHtml(
-  value
-) {
-
-  const div =
-    document.createElement(
-      "div"
-    );
-
-
-  div.textContent =
-    String(
-      value ?? ""
-    );
-
-
-  return div.innerHTML;
-
-}
-
-
-
-// ======================================================
 // FORMAT DATE
 // ======================================================
 
-function formatEmployeeDate(
-  value
-) {
+function formatDate(value) {
 
   if (!value) {
 
@@ -546,9 +383,7 @@ function formatEmployeeDate(
 
 
   const date =
-    new Date(
-      value
-    );
+    new Date(value);
 
 
   if (
@@ -580,249 +415,79 @@ function formatEmployeeDate(
 
 
 // ======================================================
-// FORMAT HOURS
-// ======================================================
-
-function formatHours(
-  hours
-) {
-
-  const number =
-    Number(
-      hours || 0
-    );
-
-
-  if (
-    !Number.isFinite(
-      number
-    )
-  ) {
-
-    return "0 hrs";
-
-  }
-
-
-  if (
-    number === 1
-  ) {
-
-    return "1 hr";
-
-  }
-
-
-  return `${number} hrs`;
-
-}
-
-
-
-// ======================================================
-// EMPLOYEE STATUS
+// STATUS
 // ======================================================
 
 function updateEmployeeStatus(
   status
 ) {
 
-  const statusElement =
+  const element =
     document.getElementById(
       "employee-status"
     );
 
 
-  if (!statusElement) {
+  if (!element) {
+
     return;
+
   }
 
 
-  statusElement.textContent =
+  element.textContent =
     status || "Unknown";
 
 
-  statusElement.classList.remove(
+  element.classList.remove(
     "active",
     "inactive",
     "loa"
   );
 
 
-  const normalizedStatus =
+  const normalized =
     String(
       status || ""
     ).toLowerCase();
 
 
+  if (normalized === "active") {
 
-  if (
-    normalizedStatus ===
-    "active"
-  ) {
-
-    statusElement.classList.add(
+    element.classList.add(
       "active"
     );
 
-
-    return;
-
   }
 
-
-
-  if (
-    normalizedStatus.includes(
-      "leave"
-    ) ||
-    normalizedStatus.includes(
-      "loa"
-    )
+  else if (
+    normalized.includes("loa") ||
+    normalized.includes("leave")
   ) {
 
-    statusElement.classList.add(
+    element.classList.add(
       "loa"
     );
 
+  }
 
-    return;
+  else {
+
+    element.classList.add(
+      "inactive"
+    );
 
   }
 
-
-
-  statusElement.classList.add(
-    "inactive"
-  );
-
 }
 
 
 
 // ======================================================
-// CREATE PROJECT CARD
+// PROJECTS
 // ======================================================
 
-function createEmployeeProject(
-  project
-) {
-
-  const wrapper =
-    document.createElement(
-      "article"
-    );
-
-
-  wrapper.className =
-    "portal-project employee-project-item";
-
-
-  const progress =
-    Math.min(
-      Math.max(
-        Number(
-          project.progress || 0
-        ),
-        0
-      ),
-      100
-    );
-
-
-  wrapper.innerHTML = `
-
-    <div class="portal-header">
-
-      <div>
-
-        <h4>
-          ${escapeHtml(
-            project.name ||
-            "Unnamed Project"
-          )}
-        </h4>
-
-        <p class="supporting-text">
-
-          ${escapeHtml(
-            project.client_name ||
-            "Nexora Project"
-          )}
-
-        </p>
-
-      </div>
-
-
-      <span class="project-status">
-
-        ${escapeHtml(
-          project.status ||
-          "Pending"
-        )}
-
-      </span>
-
-    </div>
-
-
-    <div
-      class="progress-track"
-      aria-label="Project progress"
-    >
-
-      <span
-        style="width: ${progress}%"
-      ></span>
-
-    </div>
-
-
-    <div class="meta-grid">
-
-      <p>
-
-        <strong>
-          Progress:
-        </strong>
-
-        ${progress}%
-
-      </p>
-
-
-      <p>
-
-        <strong>
-          Deadline:
-        </strong>
-
-        ${escapeHtml(
-          project.deadline ||
-          "No deadline"
-        )}
-
-      </p>
-
-    </div>
-
-  `;
-
-
-  return wrapper;
-
-}
-
-
-
-// ======================================================
-// DISPLAY PROJECTS
-// ======================================================
-
-function displayEmployeeProjects(
-  projects
-) {
+function displayProjects(projects) {
 
   const container =
     document.getElementById(
@@ -831,7 +496,9 @@ function displayEmployeeProjects(
 
 
   if (!container) {
+
     return;
+
   }
 
 
@@ -840,16 +507,14 @@ function displayEmployeeProjects(
 
 
   if (
-    !Array.isArray(
-      projects
-    ) ||
+    !Array.isArray(projects) ||
     projects.length === 0
   ) {
 
     container.innerHTML = `
 
       <p class="supporting-text">
-        You currently have no assigned projects.
+        No assigned projects.
       </p>
 
     `;
@@ -860,58 +525,124 @@ function displayEmployeeProjects(
   }
 
 
-  projects.forEach(
-    (project) => {
+  projects.forEach((project) => {
 
-      container.appendChild(
-        createEmployeeProject(
-          project
-        )
+    const item =
+      document.createElement(
+        "article"
       );
 
-    }
-  );
 
-}
-
+    item.className =
+      "employee-project-item";
 
 
-// ======================================================
-// CREATE ROLE BADGE
-// ======================================================
+    const progress =
+      Math.min(
+        Math.max(
+          Number(
+            project.progress || 0
+          ),
+          0
+        ),
+        100
+      );
 
-function createRoleBadge(
-  role
-) {
 
-  const badge =
-    document.createElement(
-      "span"
+    item.innerHTML = `
+
+      <div class="portal-header">
+
+        <div>
+
+          <h4>
+
+            ${escapeHtml(
+              project.name ||
+              "Unnamed Project"
+            )}
+
+          </h4>
+
+          <p class="supporting-text">
+
+            ${escapeHtml(
+              project.client_name ||
+              "Nexora"
+            )}
+
+          </p>
+
+        </div>
+
+
+        <span class="project-status">
+
+          ${escapeHtml(
+            project.status ||
+            "Pending"
+          )}
+
+        </span>
+
+      </div>
+
+
+      <div class="progress-track">
+
+        <span
+          style="width: ${progress}%"
+        ></span>
+
+      </div>
+
+
+      <div class="meta-grid">
+
+        <p>
+
+          <strong>
+            Progress:
+          </strong>
+
+          ${progress}%
+
+        </p>
+
+
+        <p>
+
+          <strong>
+            Deadline:
+          </strong>
+
+          ${escapeHtml(
+            project.deadline ||
+            "No deadline"
+          )}
+
+        </p>
+
+      </div>
+
+    `;
+
+
+    container.appendChild(
+      item
     );
 
-
-  badge.className =
-    "role-badge";
-
-
-  badge.textContent =
-    role.name ||
-    "Unknown Role";
-
-
-  return badge;
+  });
 
 }
 
 
 
 // ======================================================
-// DISPLAY DISCORD ROLES
+// DISCORD ROLES
 // ======================================================
 
-function displayEmployeeRoles(
-  roles
-) {
+function displayRoles(roles) {
 
   const container =
     document.getElementById(
@@ -920,7 +651,9 @@ function displayEmployeeRoles(
 
 
   if (!container) {
+
     return;
+
   }
 
 
@@ -929,9 +662,7 @@ function displayEmployeeRoles(
 
 
   if (
-    !Array.isArray(
-      roles
-    ) ||
+    !Array.isArray(roles) ||
     roles.length === 0
   ) {
 
@@ -949,27 +680,38 @@ function displayEmployeeRoles(
   }
 
 
-  roles.forEach(
-    (role) => {
+  roles.forEach((role) => {
 
-      container.appendChild(
-        createRoleBadge(
-          role
-        )
+    const badge =
+      document.createElement(
+        "span"
       );
 
-    }
-  );
+
+    badge.className =
+      "role-badge";
+
+
+    badge.textContent =
+      role.name ||
+      "Unknown Role";
+
+
+    container.appendChild(
+      badge
+    );
+
+  });
 
 }
 
 
 
 // ======================================================
-// LOADING STATE
+// LOADING
 // ======================================================
 
-function showEmployeeLoading() {
+function showLoading() {
 
   setText(
     "employee-name",
@@ -1030,82 +772,28 @@ function showEmployeeLoading() {
     "—"
   );
 
-
-  const projects =
-    document.getElementById(
-      "employee-projects"
-    );
-
-
-  if (projects) {
-
-    projects.innerHTML = `
-
-      <p class="supporting-text">
-        Loading projects...
-      </p>
-
-    `;
-
-  }
-
-
-  const roles =
-    document.getElementById(
-      "employee-roles"
-    );
-
-
-  if (roles) {
-
-    roles.innerHTML = `
-
-      <p class="supporting-text">
-        Loading roles...
-      </p>
-
-    `;
-
-  }
-
 }
 
 
 
 // ======================================================
-// LOAD EMPLOYEE PORTAL
+// LOAD EMPLOYEE
 // ======================================================
 
 async function loadEmployeePortal() {
 
   const token =
-    getNexoraToken();
+    getToken();
 
 
 
-  // ====================================================
-  // NOT LOGGED IN
-  // ====================================================
+  // --------------------------------------------------
+  // NO TOKEN = ONLY LOGIN BOX
+  // --------------------------------------------------
 
   if (!token) {
 
-    if (employeeLogin) {
-
-      employeeLogin.classList.remove(
-        "is-hidden"
-      );
-
-    }
-
-
-    if (employeeDashboard) {
-
-      employeeDashboard.classList.add(
-        "is-hidden"
-      );
-
-    }
-
+    showLoggedOut();
 
     return;
 
@@ -1113,26 +801,13 @@ async function loadEmployeePortal() {
 
 
 
-  // ====================================================
-  // LOGGED IN
-  // ====================================================
+  // --------------------------------------------------
+  // DON'T SHOW DASHBOARD YET
+  //
+  // We wait until API confirms the account.
+  // --------------------------------------------------
 
-  if (employeeLogin) {
-
-    employeeLogin.classList.add(
-      "is-hidden"
-    );
-
-  }
-
-
-  if (employeeDashboard) {
-
-    employeeDashboard.classList.remove(
-      "is-hidden"
-    );
-
-  }
+  showLoggedOut();
 
 
   if (employeeError) {
@@ -1143,22 +818,112 @@ async function loadEmployeePortal() {
   }
 
 
-  showEmployeeLoading();
-
-
 
   try {
 
-    const employee =
-      await nexoraApi(
-        "/api/employee/me"
+    const response =
+      await fetch(
+        `${API_URL}/api/employee/me`,
+        {
+
+          method: "GET",
+
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`,
+
+            "Content-Type":
+              "application/json"
+
+          }
+
+        }
       );
 
 
 
-    // ==================================================
-    // BASIC EMPLOYEE INFORMATION
-    // ==================================================
+    // ------------------------------------------------
+    // EXPIRED / INVALID LOGIN
+    // ------------------------------------------------
+
+    if (
+      response.status === 401
+    ) {
+
+      removeToken();
+
+      showLoggedOut();
+
+      return;
+
+    }
+
+
+
+    // ------------------------------------------------
+    // DISCORD LOGGED IN BUT NOT EMPLOYEE
+    // ------------------------------------------------
+
+    if (
+      response.status === 404
+    ) {
+
+      showLoggedOut();
+
+
+      alert(
+        "Your Discord account is not registered as a Nexora employee."
+      );
+
+
+      return;
+
+    }
+
+
+
+    // ------------------------------------------------
+    // API ERROR
+    // ------------------------------------------------
+
+    if (!response.ok) {
+
+      showLoggedOut();
+
+
+      console.error(
+        "Employee API error:",
+        response.status
+      );
+
+
+      return;
+
+    }
+
+
+
+    // ------------------------------------------------
+    // VALID EMPLOYEE
+    // ------------------------------------------------
+
+    const employee =
+      await response.json();
+
+
+
+    // ONLY NOW SHOW DASHBOARD
+
+    showLoggedIn();
+
+    showLoading();
+
+
+
+    // ------------------------------------------------
+    // BASIC INFO
+    // ------------------------------------------------
 
     setText(
       "employee-name",
@@ -1195,9 +960,7 @@ async function loadEmployeePortal() {
 
     setText(
       "employee-hours",
-      formatHours(
-        employee.attendance?.hours
-      )
+      `${employee.attendance?.hours ?? 0} hrs`
     );
 
 
@@ -1224,16 +987,16 @@ async function loadEmployeePortal() {
 
     setText(
       "employee-hired",
-      formatEmployeeDate(
+      formatDate(
         employee.hired_at
       )
     );
 
 
 
-    // ==================================================
+    // ------------------------------------------------
     // STATUS
-    // ==================================================
+    // ------------------------------------------------
 
     updateEmployeeStatus(
       employee.status
@@ -1241,27 +1004,28 @@ async function loadEmployeePortal() {
 
 
 
-    // ==================================================
+    // ------------------------------------------------
     // PROJECTS
-    // ==================================================
+    // ------------------------------------------------
 
-    displayEmployeeProjects(
+    displayProjects(
       employee.projects
     );
 
 
 
-    // ==================================================
-    // DISCORD ROLES
-    // ==================================================
+    // ------------------------------------------------
+    // ROLES
+    // ------------------------------------------------
 
-    displayEmployeeRoles(
+    displayRoles(
       employee.discord_roles
     );
 
 
+  }
 
-  } catch (error) {
+  catch (error) {
 
     console.error(
       "Employee portal error:",
@@ -1269,36 +1033,7 @@ async function loadEmployeePortal() {
     );
 
 
-    if (employeeError) {
-
-      employeeError.textContent =
-        error.message;
-
-    }
-
-
-
-    // Session expired
-    if (!getNexoraToken()) {
-
-      if (employeeLogin) {
-
-        employeeLogin.classList.remove(
-          "is-hidden"
-        );
-
-      }
-
-
-      if (employeeDashboard) {
-
-        employeeDashboard.classList.add(
-          "is-hidden"
-        );
-
-      }
-
-    }
+    showLoggedOut();
 
   }
 
@@ -1307,7 +1042,7 @@ async function loadEmployeePortal() {
 
 
 // ======================================================
-// REFRESH EMPLOYEE PROFILE
+// REFRESH
 // ======================================================
 
 if (
@@ -1344,7 +1079,7 @@ if (
 
 
 // ======================================================
-// LOGOUT BUTTON
+// LOGOUT
 // ======================================================
 
 if (
@@ -1365,7 +1100,7 @@ if (
 
 
 // ======================================================
-// START EMPLOYEE PORTAL
+// START
 // ======================================================
 
 loadEmployeePortal();
