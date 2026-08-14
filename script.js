@@ -139,8 +139,7 @@ document
 
 
 // CHANGE THIS ONCE YOUR API HAS A PUBLIC URL
-const API_URL =
-  "http://localhost:8000";
+const API_URL = "https://api.nexorasolutions.com";
 
 
 
